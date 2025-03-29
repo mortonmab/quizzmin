@@ -58,6 +58,7 @@
     "react-router-dom": "^6.23.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "tempo-devtools": "^2.0.98",
     "vaul": "^0.9.1",
     "zod": "^3.23.8"
   },
@@ -69,7 +70,6 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "3.4.1",
-    "tempo-devtools": "^2.0.98",
     "typescript": "^5.8.2",
     "vite": "^6.2.3"
   }

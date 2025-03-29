@@ -84,70 +84,44 @@ const QuestionBank = () => {
     loadStats();
   }, [filters]);
 
-  // Initial data loading
-  useEffect(() => {
+  const loadQuestions = () => {
+    const fetchedQuestions = getQuestions(filters);
+    setQuestions(fetchedQuestions);
+
+    // Extract unique categories
+    const uniqueCategories = Array.from(
+      new Set(fetchedQuestions.map((q) => q.category)),
+    );
+    setCategories(uniqueCategories);
+  };
+
+  const loadStats = () => {
+    const fetchedStats = getQuestionStats();
+    setStats(fetchedStats);
+  };
+
+  const handleCreateQuestion = (data: Partial<Question>) => {
+    // In a real app, this would be an API call
+    // For now, we'll just reload the questions
+    setIsFormOpen(false);
     loadQuestions();
     loadStats();
-  }, []);
-
-  const loadQuestions = async () => {
-    try {
-      const fetchedQuestions = await getQuestions(filters);
-      setQuestions(fetchedQuestions);
-
-      // Extract unique categories
-      const uniqueCategories = Array.from(
-        new Set(fetchedQuestions.map((q) => q.category)),
-      );
-      setCategories(uniqueCategories);
-    } catch (error) {
-      console.error("Error loading questions:", error);
-    }
   };
 
-  const loadStats = async () => {
-    try {
-      const fetchedStats = await getQuestionStats();
-      setStats(fetchedStats);
-    } catch (error) {
-      console.error("Error loading stats:", error);
-    }
+  const handleUpdateQuestion = (data: Partial<Question>) => {
+    // In a real app, this would be an API call
+    // For now, we'll just reload the questions
+    setIsFormOpen(false);
+    setSelectedQuestion(null);
+    loadQuestions();
+    loadStats();
   };
 
-  const handleCreateQuestion = async (data: Partial<Question>) => {
-    try {
-      await createQuestion(data as Omit<Question, "id">);
-      setIsFormOpen(false);
-      loadQuestions();
-      loadStats();
-    } catch (error) {
-      console.error("Error creating question:", error);
-    }
-  };
-
-  const handleUpdateQuestion = async (data: Partial<Question>) => {
-    try {
-      if (selectedQuestion?.id) {
-        await updateQuestion(selectedQuestion.id, data);
-        setIsFormOpen(false);
-        setSelectedQuestion(null);
-        loadQuestions();
-        loadStats();
-      }
-    } catch (error) {
-      console.error("Error updating question:", error);
-    }
-  };
-
-  const handleDeleteQuestion = async (id: string) => {
-    try {
-      await deleteQuestion(id);
-      setQuestionToDelete(null);
-      loadQuestions();
-      loadStats();
-    } catch (error) {
-      console.error("Error deleting question:", error);
-    }
+  const handleDeleteQuestion = (id: string) => {
+    deleteQuestion(id);
+    setQuestionToDelete(null);
+    loadQuestions();
+    loadStats();
   };
 
   const handleImportCsv = () => {

@@ -86,19 +86,10 @@ const VideoManagement = () => {
   useEffect(() => {
     loadVideos();
   }, [filters]);
-  
-  // Initial data loading
-  useEffect(() => {
-    loadVideos();
-  }, []);
 
-  const loadVideos = async () => {
-    try {
-      const fetchedVideos = await getVideos(filters);
-      setVideos(fetchedVideos);
-    } catch (error) {
-      console.error("Error loading videos:", error);
-    }
+  const loadVideos = () => {
+    const fetchedVideos = getVideos(filters);
+    setVideos(fetchedVideos);
   };
 
   const resetForm = () => {
@@ -146,35 +137,27 @@ const VideoManagement = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!validateForm()) return;
 
-    try {
-      if (selectedVideo) {
-        // Update existing video
-        await updateVideo(selectedVideo.id, formData);
-      } else {
-        // Create new video
-        await createVideo(formData as Omit<Video, "id">);
-      }
-
-      setIsFormOpen(false);
-      resetForm();
-      setSelectedVideo(null);
-      loadVideos();
-    } catch (error) {
-      console.error("Error saving video:", error);
+    if (selectedVideo) {
+      // Update existing video
+      updateVideo(selectedVideo.id, formData);
+    } else {
+      // Create new video
+      createVideo(formData);
     }
+
+    setIsFormOpen(false);
+    resetForm();
+    setSelectedVideo(null);
+    loadVideos();
   };
 
-  const handleDeleteVideo = async (id: string) => {
-    try {
-      await deleteVideo(id);
-      setVideoToDelete(null);
-      loadVideos();
-    } catch (error) {
-      console.error("Error deleting video:", error);
-    }
+  const handleDeleteVideo = (id: string) => {
+    deleteVideo(id);
+    setVideoToDelete(null);
+    loadVideos();
   };
 
   const handleFileUpload = async (file: File) => {
